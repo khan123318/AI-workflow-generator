@@ -25,7 +25,7 @@ else:
 """
 
 # --- Path to default CSV ---
-default_csv_path = r"D:\Aiza\AI-Workflow-Generator\sample_sales.csv"
+default_csv_path = r"D:\Aiza\ai_report_generator\superstore_data.csv"
 
 # --- Load default CSV ---
 def load_default_csv(path):
@@ -63,6 +63,56 @@ def show_sales_chart(data):
     )
     st.plotly_chart(fig, use_container_width=True)
 
+# modules/visuals.py
+import plotly.express as px
+import pandas as pd
+
+
+
+# -----------------------------
+# Analyst Portal Charts
+# -----------------------------
+
+def multi_line_chart(df: pd.DataFrame, x_col: str, y_cols: list, title="Multi-Line Chart"):
+    """
+    Line chart comparing multiple metrics
+    """
+    fig = px.line(df, x=x_col, y=y_cols, title=title)
+    fig.update_layout(hovermode="x unified")
+    return fig
+
+def box_outlier_chart(df: pd.DataFrame, y_col: str, title="Outlier Detection"):
+    """
+    Box plot for detecting outliers
+    """
+    fig = px.box(df, y=y_col, title=title, points="all")
+    return fig
+
+def heatmap_correlation(df: pd.DataFrame, title="Correlation Heatmap"):
+    """
+    Correlation matrix heatmap
+    """
+    corr = df.corr()
+    fig = px.imshow(
+        corr, text_auto=True, color_continuous_scale="RdBu_r", title=title
+    )
+    return fig
+
+def scatter_anomaly_highlight(df: pd.DataFrame, x_col: str, y_col: str, anomaly_col: str, title="Anomaly Detection"):
+    """
+    Scatter chart highlighting anomalies for Analyst portal
+    """
+    fig = px.scatter(
+        df, x=x_col, y=y_col, color=anomaly_col.astype(str),
+        title=title,
+        color_discrete_map={"0": "blue", "1": "red"},
+        hover_data=df.columns
+    )
+    fig.update_layout(hovermode="closest")
+    return fig
+
+
 # --- Display the chart ---
 if not df.empty:
     show_sales_chart(df)
+
