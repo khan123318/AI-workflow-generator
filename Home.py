@@ -1,62 +1,75 @@
 import streamlit as st
 import pandas as pd
-import os
-from dotenv import load_dotenv
+import time
+from utils import ui 
 
-load_dotenv()
-api_key = os.getenv("HF_API_TOKEN")
+# 1. Config & Styling
+st.set_page_config(page_title="Enterprise AI Hub", layout="wide", page_icon="🚀")
+ui.setup_styling()
 
-# 1. Global Page Config
-st.set_page_config(
-    page_title="Enterprise AI Workflow",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
+# 2. Hero Section (Modern Layout)
+# We use a container to center the visual weight
+with st.container():
+    st.title("Enterprise AI Nexus")
+    st.markdown("""
+        <p style='font-size: 1.25rem; color: #52525b; max-width: 600px; line-height: 1.6;'>
+            Transform raw data into <b>Strategic Intelligence</b>. 
+            Upload your system logs to activate the autonomous agent workflow.
+        </p>
+    """, unsafe_allow_html=True)
 
-st.title("🚀 Enterprise Data Hub")
-st.markdown("### Upload Data Once, Analyze Everywhere")
+st.divider()
 
-# --- FIX: INITIALIZE SESSION STATE ---
-# This was missing! It creates the empty variables when the app starts.
-if "df" not in st.session_state:
-    st.session_state.df = None
-if "file_name" not in st.session_state:
-    st.session_state.file_name = None
+# 3. Main Action Area
+col_upload, col_status = st.columns([2, 1], gap="large")
 
-# 2. Reset Logic (Clears memory when new file uploaded)
-def reset_state():
-    st.session_state.df = None
-    st.session_state.file_name = None
+with col_upload:
+    st.subheader("📂 Ingest Data")
+    
+    # State Management
+    if "df" not in st.session_state:
+        st.session_state.df = None
+        st.session_state.file_name = None
 
-# 3. File Uploader
-uploaded_file = st.file_uploader(
-    "📂 Upload Dataset (CSV)", 
-    type=["csv"], 
-    on_change=reset_state
-)
+    def reset_state():
+        st.session_state.df = None
 
-# 4. Smart Data Loading
-if uploaded_file is not None:
+    uploaded_file = st.file_uploader(
+        "Upload CSV System Logs", 
+        type=["csv"], 
+        on_change=reset_state,
+        help="Max file size: 2GB. Larger files will be sampled."
+    )
+
+with col_status:
+    st.subheader("🖥️ System Health")
+    # Using the new card design
+    ui.card("AI Engine", "Online", "Model: Qwen-72B / Phi-3", "🟢")
+    
+# 4. Processing Logic
+if uploaded_file:
     try:
-        # 2GB Limit Check
-        FILE_SIZE_LIMIT = 200 * 1024 * 1024
-        
-        if uploaded_file.size > FILE_SIZE_LIMIT:
-            st.warning(f"⚠️ Large file detected ({uploaded_file.size / (1024*1024):.1f} MB). Loading sample for speed.")
+        # File Handling Logic
+        if uploaded_file.size > 200 * 1024 * 1024:
+            st.warning("⚠️ Large file detected. Auto-sampling 10k rows for performance.")
             df = pd.read_csv(uploaded_file, nrows=10000)
         else:
             df = pd.read_csv(uploaded_file)
-            
-        # Save to Session State
+
         st.session_state.df = df
         st.session_state.file_name = uploaded_file.name
         
-        st.success(f"✅ Data Loaded Successfully: {len(df)} rows.")
-        st.info("👈 Please select a Portal from the Sidebar to begin analysis.")
+        # Success Animation
+        st.success(f"✅ Successfully ingested {len(df):,} records.")
         
-    except Exception as e:
-        st.error(f"❌ Error loading file: {e}")
+        # Visual Progress Bar
+        progress_text = "Initializing Manager Portal..."
+        my_bar = st.progress(0, text=progress_text)
+        for percent_complete in range(100):
+            time.sleep(0.01)
+            my_bar.progress(percent_complete + 1, text=progress_text)
+        
+        st.info("🚀 Data Ready. Navigate to **Manager Portal** in the sidebar.")
 
-# 5. Welcome Message
-if st.session_state.df is None:
-    st.info("👋 Welcome! Please upload a CSV file to unlock the Manager and Analyst portals.")
+    except Exception as e:
+        st.error(f"Ingestion Error: {e}")

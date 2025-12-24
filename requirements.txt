@@ -2,5 +2,8 @@ streamlit
 pandas
 huggingface_hub
 python-dotenv
+supabase
+plotly
+openpyxl
 matplotlib.pylot
 seaborn
