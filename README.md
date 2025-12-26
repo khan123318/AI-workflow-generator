@@ -1,3 +1,5 @@
+
+```markdown
 <div align="center">
 
 <img src="./orbit_logo.svg" width="400" alt="ORBIT Logo" />
@@ -53,37 +55,13 @@ python -m venv venv
 # Mac/Linux
 source venv/bin/activate
 
----
-
-## 🚀 Key Modules
-
-| Portal            | User Persona   | Key Capabilities                                                                                                                                          | Visual Vibe  |
-| ----------------- | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
-| **01_🏠 Home**    | All Users      | • **Smart Ingestion:** Auto-samples >200MB files.<br>• **Lottie Animations:** Interactive Sci-Fi Hero.<br>• **Splash Screen:** Cinematic "Boot Sequence." | 🪐 Galactic  |
-| **02_📈 Manager** | Executives     | • **3-Click AI:** Trends, Anomalies, Actions.<br>• **Voice Command:** Speak to control data.<br>• **Auto-Emailer:** Drafts professional reports.          | 💼 Strategic |
-| **03_🔬 Analyst** | Data Engineers | • **One-Click Clean:** Removes duplicates/nulls.<br>• **Deep Dive:** Correlation Heatmaps.<br>• **Export:** Download cleaned datasets.                    | 🧪 Technical |
-| **04_📜 Audit**   | Compliance     | • **Immutable Logs:** Tracks every AI action.<br>• **Live Stats:** Real-time user activity counter.<br>• **Search:** Filter logs by role or action.       | 🛡️ Secure   |
-
----
-
-## 🛠️ Installation & Setup
-
-### 1. Clone & Environment
-
-```bash
-git clone https://github.com/yourusername/ORBIT.git
-cd ORBIT
-python -m venv venv
-# Windows
-.\venv\Scripts\activate
-# Mac/Linux
-source venv/bin/activate
 ```
 
 ### 2. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
+
 ```
 
 ### 3. Configure Secrets
@@ -95,12 +73,14 @@ Create `.streamlit/secrets.toml` in the root directory:
 HF_API_TOKEN = "your_huggingface_token_here"
 SUPABASE_URL = "your_supabase_url_here"
 SUPABASE_KEY = "your_supabase_key_here"
+
 ```
 
 ### 4. Launch ORBIT 🚀
 
 ```bash
 streamlit run 01_🏠_Home.py
+
 ```
 
 ---
@@ -111,7 +91,7 @@ streamlit run 01_🏠_Home.py
 Created with ❤️ by [Your Name]
 
 </div>
+
 ```
 
-
-Do you want me to do that next?
+```
