@@ -14,10 +14,10 @@
 
 <br/>
 
-**The "Central Command" for Enterprise Data.**<br>
+**The "Central Command" for Enterprise Data.**  
 Transforms raw CSV logs into strategic, actionable intelligence in < 3 seconds.
 
-[🎥 View Demo](#) · 
+[🎥 View Demo](https://o-r-b-i-t.streamlit.app/) ·
 
 </div>
 
