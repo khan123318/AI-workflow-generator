@@ -146,6 +146,7 @@ with b_col1:
         ui.text_card("Market Trends", res)
         st.caption(f"⚡ Generated in {time.perf_counter() - t_start:.2f}s")
 
+# HERE: Provide your answer in concise points.
 # --- BUTTON 2: ANOMALIES ---
 with b_col2:
     if st.button("⚠️ Detect Anomalies", use_container_width=True):
@@ -154,7 +155,7 @@ with b_col2:
             ui.render_skeleton_loader()
             
         t_start = time.perf_counter()
-        prompt = f"Check these stats for outliers: {formatted_stats}. Be brief and professional."
+        prompt = f"Check these stats for outliers: {formatted_stats}. Be brief and professional. Provide your answer in concise points."
         res = fast_ai_insight(prompt)
         
         placeholder.empty()
@@ -216,9 +217,30 @@ with download_col1:
     csv = df.to_csv(index=False).encode('utf-8')
     st.download_button("📄 Download Data (CSV)", csv, "executive_data.csv", "text/csv", use_container_width=True)
 
+# HERE: Generate a TXT report for download. 
 with download_col2:
-    report_content = f"EXECUTIVE REPORT\nDATE: {pd.Timestamp.now()}\nMETRICS: {formatted_stats}"
-    st.download_button("📑 Download Report (TXT)", report_content, "Executive_Summary.txt", "text/plain", use_container_width=True)
+    if st.download_button(
+        label="📑 Download Report (TXT)",
+        data=f"""
+EXECUTIVE INTELLIGENCE REPORT
+Generated via AI Nexus
+------------------------------------------------
+DATE: {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M')}
+
+KEY METRICS:
+- Total Revenue:  ${stats['total_value']:,.2f}
+- Top Segment:    {stats['top_column']}
+- Avg Ticket:     ${stats['average_value']:,.2f}
+
+------------------------------------------------
+STRATEGIC SUMMARY:
+(See Dashboard for AI generated insights)
+""",
+        file_name="Executive_Summary.txt",
+        mime="text/plain",
+        use_container_width=True
+    ):
+        database.save_log("Download Executive Report", "Manager")
 
 with download_col3:
     if st.button("🖨️ Print to PDF", use_container_width=True):
