@@ -1,5 +1,3 @@
-
-````markdown
 <div align="center">
 
 <img src="./orbit_logo.svg" width="400" alt="ORBIT Logo" />
@@ -43,7 +41,6 @@ graph TD
     
     C & D -->|Log Actions| K[(🗄️ Supabase DB)]
     K --> E
-````
 
 ---
 
