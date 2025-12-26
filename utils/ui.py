@@ -1,128 +1,139 @@
 import streamlit as st
+import time
+import requests
+from streamlit_lottie import st_lottie
+
+def load_lottie_url(url: str):
+    """
+    Loads a Lottie animation from a URL.
+    """
+    try:
+        r = requests.get(url)
+        if r.status_code != 200:
+            return None
+        return r.json()
+    except:
+        return None
 
 def setup_styling():
     """
-    Injects the 'Marine Hub' (Zinc/Shadcn) styling and sets up the Logo.
+    Injects the 'Prism Intelligence' Design System.
+    Features: Custom Font (Outfit), Skeleton Loaders, Gradient Sidebar.
     """
-    # 1. Modern Sidebar & Global Tweaks
-    st.markdown(
-        """
-        <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    st.markdown("""
+    <style>
+        /* 1. CUSTOM FONT: OUTFIT */
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
         
-        html, body, [class*="css"] {
-            font-family: 'Inter', sans-serif;
+        html, body, [class*="css"], font, button, input {
+            font-family: 'Outfit', sans-serif !important; 
+            color: #2d3436;
+        }
+        
+        /* 2. SKELETON LOADER ANIMATION (The Shimmer) */
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+        .skeleton {
+            animation: shimmer 2s infinite linear;
+            background: linear-gradient(to right, #f0f0f0 4%, #e0e0e0 25%, #f0f0f0 36%);
+            background-size: 1000px 100%;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+        .skeleton-text { height: 20px; width: 100%; }
+        .skeleton-card { height: 150px; width: 100%; }
+        .skeleton-title { height: 30px; width: 60%; margin-bottom: 15px; }
+
+        /* 3. SIDEBAR GRADIENT */
+        [data-testid="stSidebar"] {
+            background: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%);
+            border-right: 1px solid #dee2e6;
         }
 
-        /* Metric Cards - Hover Effects */
+        /* 4. BUTTONS - POPPY & COLORFUL */
+        .stButton > button {
+            background: linear-gradient(45deg, #6c5ce7, #a29bfe);
+            color: white !important;
+            border: none;
+            border-radius: 12px;
+            padding: 0.6rem 1.2rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(108, 92, 231, 0.2);
+        }
+        .stButton > button:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 20px rgba(108, 92, 231, 0.4);
+        }
+
+        /* 5. GLASSMORPHISM CARDS */
         div[data-testid="stMetric"] {
-            background-color: #ffffff;
-            border: 1px solid #e4e4e7; /* Zinc-200 */
-            border-radius: 0.75rem;
-            padding: 1rem;
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            transition: all 0.2s ease-in-out;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+            transition: transform 0.2s;
         }
         div[data-testid="stMetric"]:hover {
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            border-color: #d4d4d8;
+            transform: translateY(-5px);
+            border-color: #6c5ce7;
         }
+    </style>
+    """, unsafe_allow_html=True)
 
-        /* Buttons - Zinc 900 Style */
-        div.stButton > button {
-            background-color: #18181b;
-            color: #fafafa;
-            border-radius: 0.5rem;
-            border: 1px solid #18181b;
-            padding: 0.5rem 1.2rem;
-            font-weight: 500;
-            transition: all 0.2s;
-        }
-        div.stButton > button:hover {
-            background-color: #27272a;
-            border-color: #27272a;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        /* Sidebar Clean Up */
-        section[data-testid="stSidebar"] {
-            border-right: 1px solid #e4e4e7;
-        }
-        
-        /* Headers */
-        h1, h2, h3 {
-            letter-spacing: -0.025em;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-    
-    # 2. Add Logo 
-    try:
-        st.logo(
-            image="https://cdn-icons-png.flaticon.com/512/2585/2585188.png", # Placeholder Pro Logo
-            link="https://www.streamlit.io",
-            icon_image=None
-        )
-    except:
-        pass
-
-def card(title, value, sub_text, icon="📊"):
+def render_skeleton_loader():
     """
-    Renders a Metric Card with the Marine Design System.
+    Renders a fake 'shimmering' UI while AI is thinking.
     """
-    st.markdown(f"""
-    <div style="
-        border: 1px solid #e4e4e7;
-        border-radius: 0.75rem;
-        padding: 1.5rem;
-        background: white;
-        box-shadow: 0 1px 3px 0 rgba(0,0,0,0.02);
-        margin-bottom: 1rem;
-        height: 100%;
-    ">
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
-            <span style="font-size: 0.875rem; font-weight: 500; color: #71717a;">{title}</span>
-            <span style="font-size: 1.25rem; background: #f4f4f5; padding: 6px; border-radius: 6px;">{icon}</span>
-        </div>
-        <div style="font-size: 1.75rem; font-weight: 700; color: #09090b; letter-spacing: -0.03em; margin-top: 4px;">
-            {value}
-        </div>
-        <div style="font-size: 0.80rem; color: #71717a; margin-top: 0.5rem; font-weight: 400;">
-            {sub_text}
+    st.markdown("""
+        <div class="skeleton skeleton-title"></div>
+        <div class="skeleton skeleton-text"></div>
+        <div class="skeleton skeleton-text"></div>
+        <div class="skeleton skeleton-text" style="width: 80%;"></div>
+    """, unsafe_allow_html=True)
+
+def card(title, value, sub_text, icon="📊", help_text=None):
+    """
+    Renders a 'Prism' Metric Card.
+    """
+    tooltip_html = f"""<span title="{help_text}" style="cursor: help; color: #a29bfe; font-size: 0.8rem; margin-left: 5px;">(ℹ️)</span>""" if help_text else ""
+
+    html_code = f"""
+    <div style="background: white; border-radius: 20px; padding: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #f0f0f0; margin-bottom: 20px; position: relative; overflow: hidden;">
+        <div style="position: absolute; top: -20px; right: -20px; width: 100px; height: 100px; background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%); opacity: 0.1; border-radius: 50%;"></div>
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; position: relative; z-index: 1;">
+            <div>
+                <span style="font-size: 0.85rem; font-weight: 600; color: #b2bec3; text-transform: uppercase; letter-spacing: 1px;">
+                    {title} {tooltip_html}
+                </span>
+                <div style="font-size: 2.2rem; font-weight: 800; color: #2d3436; margin: 8px 0;">
+                    {value}
+                </div>
+                <div style="font-size: 0.9rem; color: #00b894; font-weight: 600; display: flex; align-items: center; gap: 5px;">
+                    <span>↑</span> {sub_text}
+                </div>
+            </div>
+            <div style="background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%); color: white; width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: 0 8px 16px rgba(108, 92, 231, 0.2);">
+                {icon}
+            </div>
         </div>
     </div>
-    """, unsafe_allow_html=True)
+    """
+    st.markdown(html_code, unsafe_allow_html=True)
 
 def text_card(title, content):
     """
-    Renders a Content Card for AI text.
+    Renders a text card with a glowing accent border.
     """
-    with st.container():
-        st.markdown(f"""
-        <div style="
-            background-color: #fcfcfc;
-            border: 1px solid #e4e4e7;
-            border-radius: 0.75rem;
-            padding: 1.25rem;
-            margin-bottom: 1rem;
-        ">
-            <div style="
-                display: flex; 
-                align-items: center; 
-                gap: 10px; 
-                margin-bottom: 12px;
-                padding-bottom: 12px;
-                border-bottom: 1px solid #f4f4f5;
-            ">
-                <span style="font-size: 1.1rem;">✨</span>
-                <span style="font-size: 0.95rem; font-weight: 600; color: #18181b;">{title}</span>
-            </div>
-        """, unsafe_allow_html=True)
-        
-        # Native Markdown Rendering
-        st.markdown(content)
-        
-        st.markdown("</div>", unsafe_allow_html=True)
+    st.markdown(f"""
+    <div style="background: white; border-radius: 15px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border-left: 5px solid #6c5ce7; margin-bottom: 20px;">
+        <h3 style="margin: 0 0 10px 0; font-size: 1.1rem; color: #2d3436; display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 1.4rem;">✨</span> {title}
+        </h3>
+    """, unsafe_allow_html=True)
+    st.markdown(content)
+    st.markdown("</div>", unsafe_allow_html=True)
